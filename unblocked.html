@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #222; color: white; }
+        h1 { font-size: 2rem; }
+        .scoreboard { margin: 10px 0; font-size: 1.2rem; }
+        button { font-size: 1.5rem; margin: 10px; padding: 10px; cursor: pointer; }
+        .result { font-size: 1.5rem; margin: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Rock Paper Scissors</h1>
+    <p class="scoreboard">Player: <span id="player-score">0</span> | Bot: <span id="bot-score">0</span></p>
+    <button onclick="playGame('rock')">🪨 Rock</button>
+    <button onclick="playGame('paper')">📜 Paper</button>
+    <button onclick="playGame('scissors')">✂️ Scissors</button>
+    <p class="result" id="result">Make your move!</p>
+    <button onclick="resetScore()">🔄 Reset Score</button>
+
+    <script>
+        let playerScore = localStorage.getItem("playerScore") ? parseInt(localStorage.getItem("playerScore")) : 0;
+        let botScore = localStorage.getItem("botScore") ? parseInt(localStorage.getItem("botScore")) : 0;
+        document.getElementById("player-score").textContent = playerScore;
+        document.getElementById("bot-score").textContent = botScore;
+
+        function playGame(playerChoice) {
+            const choices = ["rock", "paper", "scissors"];
+            const botChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = "";
+
+            if (playerChoice === botChoice) {
+                result = "It's a tie! 😐";
+            } else if (
+                (playerChoice === "rock" && botChoice === "scissors") ||
+                (playerChoice === "paper" && botChoice === "rock") ||
+                (playerChoice === "scissors" && botChoice === "paper")
+            ) {
+                playerScore++;
+                result = `You win! 🎉 ${playerChoice} beats ${botChoice}`;
+            } else {
+                botScore++;
+                result = `You lose! 😢 ${botChoice} beats ${playerChoice}`;
+            }
+
+            document.getElementById("result").textContent = result;
+            document.getElementById("player-score").textContent = playerScore;
+            document.getElementById("bot-score").textContent = botScore;
+
+            localStorage.setItem("playerScore", playerScore);
+            localStorage.setItem("botScore", botScore);
+        }
+
+        function resetScore() {
+            playerScore = 0;
+            botScore = 0;
+            localStorage.setItem("playerScore", playerScore);
+            localStorage.setItem("botScore", botScore);
+            document.getElementById("player-score").textContent = playerScore;
+            document.getElementById("bot-score").textContent = botScore;
+            document.getElementById("result").textContent = "Scores reset! Play again.";
+        }
+    </script>
+</body>
+</html>
